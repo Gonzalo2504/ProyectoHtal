@@ -5,7 +5,7 @@ from typing import List
 from app.crud import crud_pacientes
 from app.schemas.paciente_schemas import Paciente, PacienteCreate, PacienteUpdate
 from app.database import get_db
-from app.auth import get_current_user, get_current_medico_user, get_current_admin_user, get_current_enfermero_user, Usuario
+from app.auth import get_current_user, get_current_medico_user, get_current_admin_user, Usuario
 
 router = APIRouter()
 

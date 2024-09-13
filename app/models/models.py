@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql import func
 from app.database import Base
 
 Base = declarative_base()
@@ -38,24 +39,9 @@ class Paciente(Base):
     telefono = Column(String(255))
     email = Column(String(255))
     estado = Column(String(255))
-    
-    # Relación con órdenes médicas
-    ordenes_medicas = relationship("OrdenMedica", back_populates="paciente")
-    # Relación con evoluciones por turno
-    evoluciones_por_turno = relationship("EvolucionPorTurno", back_populates="paciente")
 
-class OrdenMedica(Base):
-    __tablename__ = "ordenes_medicas"
-
-    id = Column(Integer, primary_key=True, index=True)
-    paciente_id = Column(Integer, ForeignKey('pacientes.id'))
-    medico_id = Column(Integer, ForeignKey('medicos.id'))
-    descripcion = Column(String(255))
-    fecha_emision = Column(DateTime)
-    estado = Column(String(255))
-
-    paciente = relationship("Paciente", back_populates="ordenes_medicas")
-    medico = relationship("Medico", back_populates="ordenes_medicas")
+    # Relación con TriagePaciente
+    triages = relationship("TriagePaciente", back_populates="paciente")
 
 class Medico(Base):
     __tablename__ = "medicos"
@@ -72,7 +58,6 @@ class Medico(Base):
     rol_id = Column(Integer, ForeignKey("roles.id"))
 
     rol = relationship("Rol")
-    ordenes_medicas = relationship("OrdenMedica", back_populates="medico")
 
 class Enfermero(Base):
     __tablename__ = "enfermeros"
@@ -88,32 +73,28 @@ class Enfermero(Base):
     rol_id = Column(Integer, ForeignKey("roles.id"))
 
     rol = relationship("Rol")
-    tareas_enfermeria = relationship("TareaEnfermeria", back_populates="enfermero")
-    evoluciones_por_turno = relationship("EvolucionPorTurno", back_populates="enfermero")
+    # Relación con TriagePaciente
+    triages = relationship("TriagePaciente", back_populates="enfermero")
 
-class TareaEnfermeria(Base):
-    __tablename__ = "tareas_enfermeria"
+class TriagePaciente(Base):
+    __tablename__ = "triage_paciente"
 
-    id = Column(Integer, primary_key=True, index=True)
-    orden_medica_id = Column(Integer, ForeignKey('ordenes_medicas.id'), nullable=True)
-    enfermero_id = Column(Integer, ForeignKey('enfermeros.id'))
-    tipo_tarea = Column(String(255))
-    fecha_completada = Column(DateTime)
-    notas = Column(String(255))
+    id_triage = Column(Integer, primary_key=True, index=True)
+    id_paciente = Column(Integer, ForeignKey("pacientes.id"))
+    id_enfermmero = Column(Integer, ForeignKey("enfermeros.id"))
+    fecha_y_hora = Column(DateTime, default=func.now())
+    clasificacion = Column(String(255))
+    antecedentes = Column(String(255))
+    frecuencia_cardiaca = Column(String(255))
+    presion_arterial_sistolica = Column(String(255))
+    presion_arterial_diastolica = Column(String(255))
+    temperatura = Column(String(255))
+    frecuencia_respiratoria = Column(String(255))
+    saturacion_oxigeno = Column(String(255))
+    motivo_consulta = Column(String(255))
+    observaciones = Column(String(255))
 
-    orden_medica = relationship("OrdenMedica")
-    enfermero = relationship("Enfermero", back_populates="tareas_enfermeria")
+    # Relaciones con Paciente y Enfermero
+    paciente = relationship("Paciente", back_populates="triages")
+    enfermero = relationship("Enfermero", back_populates="triages")
 
-class EvolucionPorTurno(Base):
-    __tablename__ = "evoluciones_por_turno"
-
-    id = Column(Integer, primary_key=True, index=True)
-    paciente_id = Column(Integer, ForeignKey('pacientes.id'))
-    enfermero_id = Column(Integer, ForeignKey('enfermeros.id'))
-    turno_inicio = Column(DateTime)
-    turno_fin = Column(DateTime)
-    resumen_tareas = Column(String(255))
-    fecha_generacion = Column(DateTime)
-
-    paciente = relationship("Paciente", back_populates="evoluciones_por_turno")
-    enfermero = relationship("Enfermero", back_populates="evoluciones_por_turno")
