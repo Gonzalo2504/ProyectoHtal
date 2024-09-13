@@ -12,6 +12,8 @@ class PacienteCreate(BaseModel):
     telefono: Optional[str] = None
     email: str
     estado: str
+    estado_atencion: str
+    triage_id : int
 
 # Schema para mostrar los datos de Paciente
 class Paciente(BaseModel):
@@ -24,6 +26,9 @@ class Paciente(BaseModel):
     telefono: Optional[str] = None
     email: str
     estado: str
+    estado_atencion: str
+    triage_id : int
+
     
     class Config:
         orm_mode = True  
@@ -36,7 +41,9 @@ class PacienteUpdate(BaseModel):
     direccion: Optional[str] = None
     telefono: Optional[str] = None
     email: Optional[str] = None
-    estado: Optional[str] 
+    estado: Optional[str]
+    estado_atencion: Optional[str]
+    triage_id : Optional[int] 
 
     class Config:
         orm_mode = True
