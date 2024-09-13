@@ -6,10 +6,10 @@ alembic.ini
 venv/
 migrations/
 __pycache__/
-crud/__pycache__
-models/__pycache__
-routes/__pycache__
-schemas/__pycache__
+/crud/__pycache__
+/models/__pycache__
+/routes/__pycache__
+/schemas/__pycache__
 
-crud/__init__.py
-routes/__init__.py
+/crud/__init__.py
+/routes/__init__.py
