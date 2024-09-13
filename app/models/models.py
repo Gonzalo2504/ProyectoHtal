@@ -40,11 +40,9 @@ class Paciente(Base):
     email = Column(String(255))
     estado = Column(String(255))
     estado_atencion = Column(String(50), default="en espera") #puede ser "en espera", "en triage" o "atendido"
-    triage_id = Column(Integer, ForeignKey("triage_paciente.id_triage"))
 
     # Relación con TriagePaciente
-    triages = relationship("TriagePaciente", back_populates="paciente")
-    triage_actual = relationship("TriagePaciente")
+    triages = relationship("TriagePaciente", back_populates="paciente", foreign_keys="[TriagePaciente.id_paciente]")
 
 class Medico(Base):
     __tablename__ = "medicos"
