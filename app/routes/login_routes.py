@@ -7,7 +7,7 @@ from app.database import get_db
 
 router = APIRouter()
 
-@router.post("/login/")
+@router.post("/login")
 def login(credentials: LoginSchema, db: Session = Depends(get_db)):
     # Buscar el usuario en la tabla de médicos 
     medico = db.query(Medico).filter(Medico.usuario == credentials.usuario).first()
