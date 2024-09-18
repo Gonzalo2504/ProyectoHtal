@@ -9,11 +9,11 @@ from app.auth import get_current_user, get_current_medico_user, get_current_admi
 
 router = APIRouter()
 
-@router.post("/pacientes/", response_model=Paciente)
+@router.post("/pacientes", response_model=Paciente)
 def create_paciente(paciente: PacienteCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_admin_user)):
     return crud_pacientes.create_paciente(db=db, paciente=paciente)
 
-@router.get("/pacientes/", response_model=List[Paciente])
+@router.get("/pacientes", response_model=List[Paciente])
 def read_pacientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_user)):
     return crud_pacientes.get_pacientes(db=db, skip=skip, limit=limit)
 

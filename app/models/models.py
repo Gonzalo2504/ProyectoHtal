@@ -38,11 +38,10 @@ class Paciente(Base):
     direccion = Column(String(255))
     telefono = Column(String(255))
     email = Column(String(255))
-    estado = Column(String(255))
     estado_atencion = Column(String(50), default="en espera") #puede ser "en espera", "en triage" o "atendido"
 
-    # Relación con TriagePaciente
-    triages = relationship("TriagePaciente", back_populates="paciente", foreign_keys="[TriagePaciente.id_paciente]")
+    # Relación muchos a muchos con triages
+    triages = relationship("PacienteTriage", back_populates="paciente")
 
 class Medico(Base):
     __tablename__ = "medicos"
@@ -74,15 +73,15 @@ class Enfermero(Base):
     rol_id = Column(Integer, ForeignKey("roles.id"))
 
     rol = relationship("Rol")
-    # Relación con TriagePaciente
-    triages = relationship("TriagePaciente", back_populates="enfermero")
+    # Relación con TriagePaciente a través de la tabla intermedia PacienteTriage
+    triages = relationship("PacienteTriage", back_populates="enfermero")
 
 class TriagePaciente(Base):
     __tablename__ = "triage_paciente"
 
     id_triage = Column(Integer, primary_key=True, index=True)
     id_paciente = Column(Integer, ForeignKey("pacientes.id"))
-    id_enfermmero = Column(Integer, ForeignKey("enfermeros.id"))
+    id_enfermero = Column(Integer, ForeignKey("enfermeros.id"))  # Cambiado el typo
     fecha_y_hora = Column(DateTime, default=func.now())
     clasificacion = Column(String(255))
     antecedentes = Column(String(255))
@@ -95,7 +94,16 @@ class TriagePaciente(Base):
     motivo_consulta = Column(String(255))
     observaciones = Column(String(255))
 
-    # Relaciones con Paciente y Enfermero
-    paciente = relationship("Paciente", back_populates="triages")
-    enfermero = relationship("Enfermero", back_populates="triages")
+    # Relación con la tabla intermedia PacienteTriage
+    pacientes = relationship("PacienteTriage", back_populates="triage")
 
+class PacienteTriage(Base):
+    __tablename__ = 'paciente_triage'
+
+    paciente_id = Column(Integer, ForeignKey('pacientes.id'), primary_key=True)
+    triage_id = Column(Integer, ForeignKey('triage_paciente.id_triage'), primary_key=True)
+    enfermero_id = Column(Integer, ForeignKey('enfermeros.id'))  
+
+    paciente = relationship("Paciente", back_populates="triages")
+    triage = relationship("TriagePaciente", back_populates="pacientes")
+    enfermero = relationship("Enfermero", back_populates="triages")
