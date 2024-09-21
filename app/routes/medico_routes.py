@@ -5,36 +5,40 @@ from typing import List
 from app.crud import crud_medicos
 from app.schemas.medico_schemas import Medico, MedicoCreate, MedicoUpdate
 from app.database import get_db
-from app.auth import get_current_user, get_current_medico_user, get_current_admin_user, get_current_enfermero_user, Usuario
+from app.auth import get_user_by_role, Usuario
 
 router = APIRouter()
 
-# Crear un nuevo medico
+# Crear un nuevo médico, solo accesible para administradores
 @router.post("/medicos/", response_model=Medico)
-def create_medico(medico: MedicoCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_current_admin_user)):
+def create_medico(medico: MedicoCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
     return crud_medicos.create_medico(db=db, medico=medico)
 
+# Leer todos los médicos, accesible para administradores y enfermeros
 @router.get("/medicos/", response_model=List[Medico])
-def read_medicos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db),  current_user: Usuario = Depends(get_current_admin_user)):
+def read_medicos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
     return crud_medicos.get_medicos(db=db, skip=skip, limit=limit)
 
+# Leer un médico específico, accesible para administradores y enfermeros
 @router.get("/medicos/{medico_id}", response_model=Medico)
-def read_medico(medico_id: int, db: Session = Depends(get_db),  current_user: Usuario = Depends(get_current_admin_user)):
+def read_medico(medico_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
     db_medico = crud_medicos.get_medico(db=db, medico_id=medico_id)
     if db_medico is None:
-        raise HTTPException(status_code=404, detail="Medico no encontrado")
+        raise HTTPException(status_code=404, detail="Médico no encontrado")
     return db_medico
 
+# Actualizar la información de un médico, accesible para administradores y médicos
 @router.put("/medicos/{medico_id}", response_model=Medico)
-def update_medico(medico_id: int, medico: MedicoUpdate, db: Session = Depends(get_db),  current_user: Usuario = Depends(get_current_admin_user or get_current_medico_user)):
+def update_medico(medico_id: int, medico: MedicoUpdate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2]))):
     db_medico = crud_medicos.update_medico(db=db, medico_id=medico_id, medico=medico)
     if db_medico is None:
-        raise HTTPException(status_code=404, detail="Medico no encontrado")
+        raise HTTPException(status_code=404, detail="Médico no encontrado")
     return db_medico
 
+# Eliminar un médico, solo accesible para administradores
 @router.delete("/medicos/{medico_id}", response_model=Medico)
-def delete_medico(medico_id: int, db: Session = Depends(get_db),  current_user: Usuario = Depends(get_current_admin_user)):
+def delete_medico(medico_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
     db_medico = crud_medicos.delete_medico(db=db, medico_id=medico_id)
     if db_medico is None:
-        raise HTTPException(status_code=404, detail="Medico no encontrado")
+        raise HTTPException(status_code=404, detail="Médico no encontrado")
     return db_medico
