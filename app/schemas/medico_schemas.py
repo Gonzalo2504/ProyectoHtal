@@ -10,7 +10,7 @@ class MedicoBase(BaseModel):
     telefono: Optional[str] = None
     usuario: Optional[str] = None
     contrasena: Optional[str] = None
-    rol_id: int 
+    rol_id: int  
 
 class MedicoCreate(MedicoBase):
     pass

@@ -55,7 +55,7 @@ class Medico(Base):
     telefono = Column(String(255))
     usuario = Column(String(255))
     contrasena = Column(String(255))
-    rol_id = Column(Integer, ForeignKey("roles.id"))
+    rol_id = Column(Integer, ForeignKey("roles.id"))    
 
     rol = relationship("Rol")
 
@@ -71,7 +71,7 @@ class Enfermero(Base):
     usuario = Column(String(255))
     contrasena = Column(String(255))
     rol_id = Column(Integer, ForeignKey("roles.id"))
-
+    
     rol = relationship("Rol")
     # Relación con TriagePaciente a través de la tabla intermedia PacienteTriage
     triages = relationship("PacienteTriage", back_populates="enfermero")
@@ -107,3 +107,4 @@ class PacienteTriage(Base):
     paciente = relationship("Paciente", back_populates="triages")
     triage = relationship("TriagePaciente", back_populates="pacientes")
     enfermero = relationship("Enfermero", back_populates="triages")
+
