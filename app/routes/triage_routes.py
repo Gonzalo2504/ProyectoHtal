@@ -9,14 +9,14 @@ from app.auth import get_user_by_role, Usuario
 
 router = APIRouter()
 
-# Crear un nuevo Triage
+# Crear un nuevo Triage, accesible para enfermeros
 @router.post("/triages/", response_model=TriageRead)
 def create_triage(triage: TriageCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     return crud_triage.create_triage(db=db, triage=triage)
 
-# Obtener un Triage por ID
+# Obtener un Triage por ID, , accesible para administradores, enfermeros y medicos
 @router.get("/triages/{triage_id}", response_model=TriageRead)
-def read_triage(triage_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+def read_triage(triage_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
     db_triage = crud_triage.get_triage(db=db, triage_id=triage_id)
     if db_triage is None:
         raise HTTPException(status_code=404, detail="Triage no encontrado")
@@ -35,9 +35,9 @@ def update_triage(triage_id: int, triage: TriageUpdate, db: Session = Depends(ge
         raise HTTPException(status_code=404, detail="Triage no encontrado")
     return db_triage
 
-# Eliminar un Triage por ID
+# Eliminar un Triage por ID, accesible para administradores y enfermeros
 @router.delete("/triages/{triage_id}", response_model=TriageRead)
-def delete_triage(triage_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+def delete_triage(triage_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
     db_triage = crud_triage.delete_triage(db=db, triage_id=triage_id)
     if db_triage is None:
         raise HTTPException(status_code=404, detail="Triage no encontrado")

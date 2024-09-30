@@ -27,9 +27,9 @@ def read_medico(medico_id: int, db: Session = Depends(get_db), current_user: Usu
         raise HTTPException(status_code=404, detail="Médico no encontrado")
     return db_medico
 
-# Actualizar la información de un médico, accesible para administradores y médicos
+# Actualizar la información de un médico, accesible para administradores
 @router.put("/medicos/{medico_id}", response_model=Medico)
-def update_medico(medico_id: int, medico: MedicoUpdate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2]))):
+def update_medico(medico_id: int, medico: MedicoUpdate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
     db_medico = crud_medicos.update_medico(db=db, medico_id=medico_id, medico=medico)
     if db_medico is None:
         raise HTTPException(status_code=404, detail="Médico no encontrado")

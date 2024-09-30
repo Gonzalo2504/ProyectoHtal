@@ -14,14 +14,14 @@ router = APIRouter()
 def create_paciente(paciente: PacienteCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
     return crud_pacientes.create_paciente(db=db, paciente=paciente)
 
-# Ruta para leer pacientes, accesible para administradores y enfermeros
+# Ruta para leer pacientes, accesible para administradores, enfermeros, medicos
 @router.get("/pacientes", response_model=List[Paciente])
-def read_pacientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
+def read_pacientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
     return crud_pacientes.get_pacientes(db=db, skip=skip, limit=limit)
 
-# Ruta para leer un paciente específico, accesible para administradores y enfermeros
+# Ruta para leer un paciente específico, accesible para administradores, enfermeros, medicos
 @router.get("/pacientes/{paciente_id}", response_model=Paciente)
-def read_paciente(paciente_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
+def read_paciente(paciente_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
     paciente = crud_pacientes.get_paciente(db=db, paciente_id=paciente_id)
     if paciente is None:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
