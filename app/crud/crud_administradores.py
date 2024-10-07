@@ -51,3 +51,4 @@ def delete_administrador(db: Session, administrador_id: int):
         db.delete(db_administrador)
         db.commit()
     return db_administrador
+

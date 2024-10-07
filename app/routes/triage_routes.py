@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+from datetime import datetime
 
 from app.crud import crud_triage
 from app.schemas.triage_schemas import TriageCreate, TriageRead, TriageUpdate, TriageList
@@ -9,10 +10,30 @@ from app.auth import get_user_by_role, Usuario
 
 router = APIRouter()
 
-# Crear un nuevo Triage, accesible para enfermeros
-@router.post("/triages/", response_model=TriageRead)
+@router.post("/triages", response_model=TriageRead)
 def create_triage(triage: TriageCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
-    return crud_triage.create_triage(db=db, triage=triage)
+    # Usa el id_usuario extraído del token
+    id_enfermero = current_user.id_usuario
+
+    # Crear el triage asociándolo con el enfermero autenticado
+    new_triage = TriageCreate(
+        id_paciente=triage.id_paciente,
+        id_enfermero=id_enfermero,
+        fecha_y_hora=datetime.now(),
+        clasificacion=triage.clasificacion,
+        antecedentes=triage.antecedentes,
+        frecuencia_cardiaca=triage.frecuencia_cardiaca,
+        presion_arterial_sistolica=triage.presion_arterial_sistolica,
+        presion_arterial_diastolica=triage.presion_arterial_diastolica,
+        temperatura=triage.temperatura,
+        frecuencia_respiratoria=triage.frecuencia_respiratoria,
+        saturacion_oxigeno=triage.saturacion_oxigeno,
+        motivo_consulta=triage.motivo_consulta,
+        observaciones=triage.observaciones
+    )
+
+    return crud_triage.create_triage(db=db, triage=new_triage)
+
 
 # Obtener un Triage por ID, , accesible para administradores, enfermeros y medicos
 @router.get("/triages/{triage_id}", response_model=TriageRead)
@@ -23,8 +44,8 @@ def read_triage(triage_id: int, db: Session = Depends(get_db), current_user: Usu
     return db_triage
 
 # Obtener una lista de todos los Triages (con paginación)
-@router.get("/triages/", response_model=List[TriageRead])
-def read_triages(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+@router.get("/triages", response_model=List[TriageRead])
+def read_triages(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
     return crud_triage.get_triages(db=db, skip=skip, limit=limit)
 
 # Actualizar un Triage por ID

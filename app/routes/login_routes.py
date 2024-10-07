@@ -20,6 +20,6 @@ def login(credentials: LoginSchema, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Credenciales incorrectas")
 
     # Crear token de acceso
-    access_token = create_access_token(data={"sub": user.usuario, "rol_id": user.rol_id})
+    access_token = create_access_token(data={"sub": user.usuario, "id_usuario": user.id, "rol_id": user.rol_id})
 
     return {"access_token": access_token, "token_type": "bearer"}
