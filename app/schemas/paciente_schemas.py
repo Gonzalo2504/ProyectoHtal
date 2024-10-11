@@ -26,7 +26,7 @@ class Paciente(BaseModel):
     estado_atencion: Optional[str] = None
     
     class Config:
-        orm_mode = True  
+        from_attributes = True  
 
 class PacienteUpdate(BaseModel):
     nombre: Optional[str] = None
@@ -39,4 +39,4 @@ class PacienteUpdate(BaseModel):
     estado_atencion: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True

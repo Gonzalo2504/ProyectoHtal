@@ -19,7 +19,7 @@ class TriageCreate(BaseModel):
     observaciones: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # GET: Leer un Triage
 class TriageRead(BaseModel):
@@ -39,7 +39,7 @@ class TriageRead(BaseModel):
     observaciones: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # PUT: Actualizar un Triage
 class TriageUpdate(BaseModel):
@@ -55,11 +55,11 @@ class TriageUpdate(BaseModel):
     observaciones: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 # GET: Lista de Triage
 class TriageList(BaseModel):
     triages: List[TriageRead]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
