@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
@@ -89,6 +89,19 @@ class TriagePaciente(Base):
     saturacion_oxigeno = Column(String(255))
     motivo_consulta = Column(String(255))
     observaciones = Column(String(255))
+
+class OrdenMedica(Base):
+    __tablename__ = 'ordenes_medicas'
+
+    id = Column(Integer, primary_key=True, index=True)
+    id_paciente = Column(Integer, ForeignKey('pacientes.id'), nullable=False)
+    id_medico = Column(Integer, ForeignKey('medicos.id'), nullable=False)
+    fecha_y_hora = Column(DateTime, default=func.now())
+    descripcion = Column(Text, nullable=False)
+    observaciones = Column(Text)
+
+    paciente = relationship("Paciente")
+    medico = relationship("Medico")
 
 
 

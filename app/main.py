@@ -21,3 +21,4 @@ app.include_router(administrador_routes.router, prefix="/api")
 app.include_router(login_routes.router, prefix="/api")
 app.include_router(triage_routes.router, prefix="/api")
 
+
