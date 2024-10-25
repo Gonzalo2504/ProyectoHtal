@@ -14,9 +14,14 @@ router = APIRouter()
 def create_paciente(paciente: PacienteCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
     return crud_pacientes.create_paciente(db=db, paciente=paciente)
 
+# Ruta para crear varios pacientes, solo accesible para administradores
+@router.post("/pacientes/varios", response_model=List[Paciente])
+def create_pacientes(pacientes: List[PacienteCreate], db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
+    return crud_pacientes.create_pacientes(db=db, pacientes=pacientes)
+
 # Ruta para leer pacientes, accesible para administradores, enfermeros, medicos
 @router.get("/pacientes", response_model=List[Paciente])
-def read_pacientes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
+def read_pacientes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
     return crud_pacientes.get_pacientes(db=db, skip=skip, limit=limit)
 
 # Ruta para leer un paciente específico, accesible para administradores, enfermeros, medicos

@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 from app.models.models import Paciente as PacienteModel
 from app.schemas.paciente_schemas import PacienteCreate, PacienteUpdate
@@ -10,8 +11,17 @@ def create_paciente(db: Session, paciente: PacienteCreate):
     db.refresh(db_paciente)
     return db_paciente
 
+# Crear varios pacientes a la vez
+def create_pacientes(db: Session, pacientes: List[PacienteCreate]):
+    db_pacientes = [PacienteModel(**paciente.model_dump()) for paciente in pacientes]
+    db.add_all(db_pacientes)
+    db.commit()
+    for paciente in db_pacientes:
+        db.refresh(paciente)
+    return db_pacientes
+
 # Obtener la lista de pacientes
-def get_pacientes(db: Session, skip: int = 0, limit: int = 10):
+def get_pacientes(db: Session, skip: int = 0, limit: int = 100):
     return db.query(PacienteModel).offset(skip).limit(limit).all()
 
 # Obtener un paciente por ID
