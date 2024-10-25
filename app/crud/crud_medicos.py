@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 from app.models.models import Medico
 from app.schemas.medico_schemas import MedicoCreate, MedicoUpdate
@@ -27,6 +28,31 @@ def create_medico(db: Session, medico: MedicoCreate):
     db.commit()
     db.refresh(db_medico)
     return db_medico
+
+#Crear varios medicos
+def create_medicos(db: Session, medicos: List[MedicoCreate]):
+    db_medicos = []
+    for medico in medicos:
+        # Hash de la contraseña
+        hashed_password = get_password_hash(medico.contrasena)
+        # Crear el objeto Medico
+        db_medico = Medico(
+            nombre=medico.nombre,
+            apellido=medico.apellido,
+            dni=medico.dni,
+            especialidad=medico.especialidad,
+            email=medico.email,
+            telefono=medico.telefono,
+            usuario=medico.usuario,
+            contrasena=hashed_password,
+            rol_id=2
+        )
+        # Agregar el nuevo medico a la base de datos
+        db.add(db_medico)
+        db.commit()
+        db.refresh(db_medico)
+        db_medicos.append(db_medico)
+    return db_medicos
 
 #Traer medico po  id
 def get_medico(db: Session, medico_id: int):

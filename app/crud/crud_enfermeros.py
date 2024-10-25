@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 from app.models import models
 from app.schemas.enfermero_schemas import EnfermeroCreate, EnfermeroUpdate
@@ -25,6 +26,31 @@ def create_enfermero(db: Session, enfermero: EnfermeroCreate):
     db.commit()
     db.refresh(db_enfermero)
     return db_enfermero
+
+def create_enfermeros(db: Session, enfermeros: List[EnfermeroCreate]):
+    db_enfermeros = []
+    for enfermero in enfermeros:
+        # Hash de la contraseña
+        hashed_password = get_password_hash(enfermero.contrasena)
+        # Crear el objeto Enfermero
+        db_enfermero = models.Enfermero(
+            nombre=enfermero.nombre,
+            apellido=enfermero.apellido,
+            dni=enfermero.dni,
+            email=enfermero.email,
+            telefono=enfermero.telefono,
+            usuario=enfermero.usuario,
+            contrasena=hashed_password,
+            rol_id=3
+        )
+        # Agregar el nuevo enfermero a la base de datos
+        db.add(db_enfermero)
+        db_enfermeros.append(db_enfermero)
+    
+    db.commit()
+    for db_enfermero in db_enfermeros:
+        db.refresh(db_enfermero)
+    return db_enfermeros
 
 # Obtener la lista de enfermeros
 def get_enfermeros(db: Session, skip: int = 0, limit: int = 10):
