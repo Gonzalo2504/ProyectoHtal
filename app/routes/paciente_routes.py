@@ -21,7 +21,7 @@ def create_pacientes(pacientes: List[PacienteCreate], db: Session = Depends(get_
 
 # Ruta para leer pacientes, accesible para administradores, enfermeros, medicos
 @router.get("/pacientes", response_model=List[Paciente])
-def read_pacientes(skip: int = 0, limit: int = 20, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
+def read_pacientes(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
     return crud_pacientes.get_pacientes(db=db, skip=skip, limit=limit)
 
 # Ruta para leer un paciente específico, accesible para administradores, enfermeros, medicos

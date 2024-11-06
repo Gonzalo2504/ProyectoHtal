@@ -21,7 +21,7 @@ def create_pacientes(db: Session, pacientes: List[PacienteCreate]):
     return db_pacientes
 
 # Obtener la lista de pacientes
-def get_pacientes(db: Session, skip: int = 0, limit: int = 20):
+def get_pacientes(db: Session, skip: int = 0, limit: int = 100000):
     return db.query(PacienteModel).offset(skip).limit(limit).all()
 
 # Obtener un paciente por ID
