@@ -14,3 +14,4 @@ __pycache__/
 /crud/__init__.py
 /routes/__init__.py
 /alembic
+myenv/
