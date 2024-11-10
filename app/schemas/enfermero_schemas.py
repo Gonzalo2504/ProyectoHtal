@@ -16,6 +16,7 @@ class EnfermeroCreate(EnfermeroBase):
 class EnfermeroUpdate(BaseModel):
     nombre: str | None = None
     apellido: str | None = None
+    dni: int | None = None
     email: str | None = None
     telefono: str | None = None
     usuario: str | None = None
