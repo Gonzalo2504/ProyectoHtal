@@ -21,7 +21,7 @@ def create_medicos(medicos: List[MedicoCreate], db: Session = Depends(get_db), c
 
 # Leer todos los médicos, accesible para administradores y enfermeros
 @router.get("/medicos/", response_model=List[Medico])
-def read_medicos(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
+def read_medicos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 3]))):
     return crud_medicos.get_medicos(db=db, skip=skip, limit=limit)
 
 # Leer un médico específico, accesible para administradores y enfermeros

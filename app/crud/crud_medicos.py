@@ -59,7 +59,7 @@ def get_medico(db: Session, medico_id: int):
     return db.query(Medico).filter(Medico.id == medico_id).first()
 
 #Traer todos los medicos de la BD
-def get_medicos(db: Session, skip: int = 0, limit: int = 10):
+def get_medicos(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Medico).offset(skip).limit(limit).all()
 
 #Actualizar datos del medico de la BD, lo trae por id
