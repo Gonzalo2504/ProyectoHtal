@@ -1,23 +1,26 @@
-# Paso a paso para ejecutar el proyecto
 
-1. Clonar el repositorio en tu máquina local utilizando el comando `git clone https://github.com/Gonzalo2504/ProyectoHtal.git` en la terminal.
+# 🚀 Paso a paso para levantar el proyecto
 
-2. Entrar en la carpeta del proyecto con el comando `cd ProyectoHtal`.
+1. **Cloná el repo en tu compu**: Bajate el proyecto con el comando ```bash git clone https://github.com/Gonzalo2504/ProyectoHtal.git```
 
-3. Crear un archivo `config.py` en el directorio raíz con las siguientes variables necesarias para la sesión de la base de datos y del token:
+2. **Metete en la carpeta del proyecto**: ```bash cd ProyectoHtal```.
 
+3. **Configurá la base de datos y el token**: Creá un archivo config.py en el root del proyecto y meté las siguientes variables:
+
+    ```python
     DATABASE_URL = "mysql+mysqlconnector://<usuario>:<contrasena>@localhost:3306/<base_de_datos>"
     SECRET_KEY = "<clave_secreta>"
     ALGORITHM = "HS256"
     TOKEN_EXPIRE = 6
+    ```
 
-4. Crear un entorno virtual para el proyecto usando el siguiente comando:
+4. **Armá un entorno virtual**:
 
     ```bash
-      python3.10 -m venv myvenv
-      ```
+    python3.10 -m venv myvenv
+    ```
 
-5. Activar el entorno virtual:
+5. **Activá el entorno virtual**:
 
     - En Windows:
 
@@ -31,14 +34,13 @@
       source myvenv/bin/activate
       ```
 
-6. Instalar las dependencias del proyecto con el siguiente comando:
+6. **Instalá las dependencias del proyecto con este comando**:
 
     ```bash
     pip install -r app/requirements.txt
-
     ```
 
-7. Para inicializar la base de datos se debe ejecutar el siguiente comando:
+7. **Para inicializar la base de datos se debe ejecutar el siguiente comando**:
 
     ## Ejecución de la Primera Migración con Alembic
 
@@ -55,7 +57,7 @@
        ```
 
     3. **Configurar Alembic**:
-       Abre el archivo `alembic.ini` y configura la cadena de conexión a tu base de datos.
+       Abrí el archivo `alembic.ini` y configura la cadena de conexión a tu base de datos.
        ```ini
        sqlalchemy.url = mysql+mysqlconnector://<usuario>:<contraseña>@localhost:3306/<nombre_de_la_base_de_datos>
        ```
@@ -72,14 +74,15 @@
        alembic upgrade head
        ```
 
-    Con estos pasos, tu base de datos debería estar actualizada con la primera migración. Si encuentras algún problema, revisa los logs de Alembic para obtener más detalles.
+    ¡Listo! Con esto la base de datos debería estar creada. Si hay algún problema, fijate en los logs de Alembic.
 
-8. Una vez creada la primera migración y verificando que se crearon las tablas, ejecuta el servidor con el siguiente comando:
+8. **Corré el servidor**:
 
    ```bash
    uvicorn app.main:app --reload
    ```
-9. Una vez ejecutado el paso 8 y con el servidor inicializado, sigue estos pasos para crear el primer administrador:
+
+9. **Crear el primer administrador**:
 
    1. **Editar la ruta de creación de administradores**:
       Abre el archivo `administrador_routes.py` que se encuentra en la carpeta `routes` y quita temporalmente el `Depends` que verifica el rol de usuario en la función `create_administrador`. 
@@ -127,7 +130,7 @@
    4. **Probar las primeras consultas a la API**:
       Con el primer administrador creado, puedes proceder a probar las primeras consultas a la API para asegurarte de que todo funcione correctamente.
 
-10. Acceder a la documentación de la API:
+10. **Acceder a la documentación de la API**:
 
     Una vez que el servidor esté en ejecución, puedes acceder a la documentación de la API en:
     ```
@@ -135,3 +138,42 @@
     ```
 
     Esta documentación es generada automáticamente por FastAPI y te permite interactuar con los endpoints de la API directamente desde el navegador. Puedes probar solicitudes, ver los modelos de datos y explorar todas las rutas disponibles.
+
+11. Después de crear el administrador, se pueden crear pacientes, médicos y enfermeros:
+
+    - Los `rol_id` son:
+      - `1` para administradores
+      - `2` para médicos
+      - `3` para enfermeros
+
+    - Para crear estos usuarios, primero debes hacer login en la ruta `/login` utilizando el nombre de usuario y contraseña creados para cada usuario. Esto te proporcionará un token que podrás usar para hacer las solicitudes a las rutas protegidas.
+
+    - Ejemplo de solicitud `POST` para hacer login:
+      ```bash
+      curl -X POST "http://localhost:8000/login/" -H "Content-Type: application/json" -d '{
+          "usuario": "adminuser",
+          "contrasena": "adminpass"
+      }'
+      ```
+
+    - El login te devolverá un token JWT que debes incluir en el encabezado `Authorization` como `Bearer <token>` para las siguientes solicitudes.
+
+    - Ejemplo de cómo usar el token para crear un médico:
+      ```bash
+      curl -X POST "http://localhost:8000/medicos/" -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{
+          "nombre": "Doctor",
+          "apellido": "Smith",
+          "dni": 87654321,
+          "especialidad": "Cardiología",
+          "email": "doctor@example.com",
+          "telefono": "0987654321",
+          "usuario": "doctoresmith",
+          "contrasena": "docpass"
+      }'
+      ```
+
+    - Recuerda que la contraseña será hasheada en el backend antes de ser almacenada en la base de datos, asegurando así la seguridad de los datos del usuario.
+
+    - **Verificación de roles**: En las rutas, asegurate de revisar qué acciones puede realizar cada usuario según su rol_id.
+
+¡Listo! Con estos pasos vas a tener el proyecto corriendo y la API en funcionamiento. Si se traba algo, revisá los logs y las rutas para ver qué puede estar fallando. ¡Éxitos!
