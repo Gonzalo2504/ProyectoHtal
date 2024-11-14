@@ -1,9 +1,17 @@
 
 # 🚀 Paso a paso para levantar el proyecto
 
-1. **Cloná el repo en tu compu**: Bajate el proyecto con el comando ```bash git clone https://github.com/Gonzalo2504/ProyectoHtal.git```
+1. **Cloná el repo en tu compu**: Bajate el proyecto con el comando 
+    
+    ```bash 
+    git clone https://github.com/Gonzalo2504/ProyectoHtal.git
+    ```
 
-2. **Metete en la carpeta del proyecto**: ```bash cd ProyectoHtal```.
+2. **Metete en la carpeta del proyecto**: 
+
+    ```bash 
+    cd ProyectoHtal
+    ```
 
 3. **Configurá la base de datos y el token**: Creá un archivo config.py en el root del proyecto y meté las siguientes variables:
 
