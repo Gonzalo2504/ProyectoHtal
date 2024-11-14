@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class EnfermeroBase(BaseModel):
@@ -14,13 +15,13 @@ class EnfermeroCreate(EnfermeroBase):
     pass
 
 class EnfermeroUpdate(BaseModel):
-    nombre: str | None = None
-    apellido: str | None = None
-    dni: int | None = None
-    email: str | None = None
-    telefono: str | None = None
-    usuario: str | None = None
-    contrasena: str | None = None
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    dni: Optional[int] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    usuario: Optional[str] = None
+    contrasena: Optional[str] = None
 
 class Enfermero(EnfermeroBase):
     id: int

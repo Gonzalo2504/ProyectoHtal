@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class AdministradorBase(BaseModel):
@@ -14,12 +15,12 @@ class AdministradorCreate(AdministradorBase):
     pass
 
 class AdministradorUpdate(BaseModel):
-    nombre: str | None = None
-    apellido: str | None = None
-    email: str | None = None
-    telefono: str | None = None
-    usuario: str | None = None
-    contrasena: str | None = None
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    usuario: Optional[str] = None
+    contrasena: Optional[str] = None
 
 class Administrador(AdministradorBase):
     id: int

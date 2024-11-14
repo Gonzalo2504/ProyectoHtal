@@ -15,8 +15,16 @@ class MedicoBase(BaseModel):
 class MedicoCreate(MedicoBase):
     pass
 
-class MedicoUpdate(MedicoBase):
-    pass
+class MedicoUpdate(BaseModel):
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    dni: Optional[int] = None
+    especialidad: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    usuario: Optional[str] = None
+    contrasena: Optional[str] = None
+    rol_id: Optional[int] = None
 
 class Medico(MedicoBase):
     id: int
