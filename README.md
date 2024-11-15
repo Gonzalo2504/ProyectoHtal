@@ -66,8 +66,16 @@
 
     3. **Configurar Alembic**:
        Abrí el archivo `alembic.ini` y configura la cadena de conexión a tu base de datos.
+       
        ```ini
        sqlalchemy.url = mysql+mysqlconnector://<usuario>:<contraseña>@localhost:3306/<nombre_de_la_base_de_datos>
+       ```
+
+       En la carpeta /migrations `env.py`:
+
+       ```
+       from app.models.models import Base
+       target_metadata = Base.metadata
        ```
 
     4. **Generar una Migración**:
