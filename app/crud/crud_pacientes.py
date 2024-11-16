@@ -30,7 +30,7 @@ def get_paciente(db: Session, paciente_id: int):
 
 # Obtener pacientes que est n atendidos
 def get_pacientes_atendidos(db: Session, skip: int = 0, limit: int = 100000):
-    return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "Atendidos").offset(skip).limit(limit).all()
+    return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "Atendido").offset(skip).limit(limit).all()
 
 # Obtener pacientes que est n en espera
 def get_pacientes_en_espera(db: Session, skip: int = 0, limit: int = 100000):
