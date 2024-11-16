@@ -47,3 +47,13 @@ def delete_paciente_route(paciente_id: int, db: Session = Depends(get_db), curre
     if not success:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
     return {"message": "Paciente eliminado exitosamente"}
+
+# Ruta para leer pacientes en espera, accesible para enfermeros
+@router.get("/pacientes/en_espera", response_model=List[Paciente])
+def read_pacientes_en_espera(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+    return crud_pacientes.get_pacientes_en_espera(db=db, skip=skip, limit=limit)
+
+# Ruta para leer pacientes atendidos, accesible para enfermeros
+@router.get("/pacientes/atendidos", response_model=List[Paciente])
+def read_pacientes_atendidos(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+    return crud_pacientes.get_pacientes_atendidos(db=db, skip=skip, limit=limit)
