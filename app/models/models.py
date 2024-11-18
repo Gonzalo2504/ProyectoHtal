@@ -40,7 +40,7 @@ class Paciente(Base):
     email = Column(String(255))
     estado_atencion = Column(String(50), default="en espera") #puede ser "en espera" o "atendido"
 
-
+    triages = relationship("TriagePaciente", back_populates="paciente")    
 class Medico(Base):
     __tablename__ = "medicos"
 
@@ -71,6 +71,7 @@ class Enfermero(Base):
     rol_id = Column(Integer, ForeignKey("roles.id"))
     
     rol = relationship("Rol")
+    triages = relationship("TriagePaciente", back_populates="enfermero")
 
 class TriagePaciente(Base):
     __tablename__ = "triage_paciente"
@@ -90,8 +91,8 @@ class TriagePaciente(Base):
     motivo_consulta = Column(String(255))
     observaciones = Column(String(255))
     
-    paciente = relationship("Paciente")
-    enfermero = relationship("Enfermero")
+    paciente = relationship("Paciente", back_populates="triages")
+    enfermero = relationship("Enfermero", back_populates="triages")
 
 class OrdenMedica(Base):
     __tablename__ = 'ordenes_medicas'
