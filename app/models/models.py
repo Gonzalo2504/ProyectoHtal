@@ -38,7 +38,7 @@ class Paciente(Base):
     direccion = Column(String(255))
     telefono = Column(String(255))
     email = Column(String(255))
-    estado_atencion = Column(String(50), default="en espera") #puede ser "en espera" o "atendido"
+    estado_atencion = Column(String(50), default="en espera") #puede ser "en espera", "atendido", o "en tratamiento"
 
     triages = relationship("TriagePaciente", back_populates="paciente")
     ordenes_medicas = relationship("OrdenMedica", back_populates="paciente")
