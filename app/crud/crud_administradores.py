@@ -34,14 +34,22 @@ def get_administradores(db: Session, skip: int = 0, limit: int = 10):
 def get_administrador(db: Session, administrador_id: int):
     return db.query(models.Administrador).filter(models.Administrador.id == administrador_id).first()
 
-# Actualizar los datos de un administrador trae por id
+# Actualiza los datos de un administrador trae por id
+# Recibe el id del administrador y un objeto con los datos a actualizar
 def update_administrador(db: Session, administrador_id: int, administrador: AdministradorUpdate):
+    # Busca el administrador en la base de datos
     db_administrador = db.query(models.Administrador).filter(models.Administrador.id == administrador_id).first()
+    # Si el administrador existe
     if db_administrador:
+        # Itera sobre los datos a actualizar
         for key, value in administrador.dict(exclude_unset=True).items():
+            # Asigna el valor nuevo al atributo correspondiente del administrador
             setattr(db_administrador, key, value)
+        # Guarda los cambios en la base de datos
         db.commit()
+        # Refresca el objeto administrador
         db.refresh(db_administrador)
+    # Retorna el administrador actualizado
     return db_administrador
 
 # Eliminar un administrador por ID

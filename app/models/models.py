@@ -76,8 +76,8 @@ class TriagePaciente(Base):
     __tablename__ = "triage_paciente"
 
     id_triage = Column(Integer, primary_key=True, index=True)
-    id_paciente = Column(Integer, ForeignKey("pacientes.id"))
-    id_enfermero = Column(Integer, ForeignKey("enfermeros.id"))  
+    id_paciente = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
+    id_enfermero = Column(Integer, ForeignKey("enfermeros.id"), nullable=False)
     fecha_y_hora = Column(DateTime, default=func.now())
     clasificacion = Column(String(255))
     antecedentes = Column(String(255))
@@ -89,6 +89,9 @@ class TriagePaciente(Base):
     saturacion_oxigeno = Column(String(255))
     motivo_consulta = Column(String(255))
     observaciones = Column(String(255))
+    
+    paciente = relationship("Paciente")
+    enfermero = relationship("Enfermero")
 
 class OrdenMedica(Base):
     __tablename__ = 'ordenes_medicas'
