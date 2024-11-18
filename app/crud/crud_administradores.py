@@ -42,7 +42,7 @@ def update_administrador(db: Session, administrador_id: int, administrador: Admi
     # Si el administrador existe
     if db_administrador:
         # Itera sobre los datos a actualizar
-        for key, value in administrador.dict(exclude_unset=True).items():
+        for key, value in administrador.model_dump(exclude_unset=True).items():
             # Asigna el valor nuevo al atributo correspondiente del administrador
             setattr(db_administrador, key, value)
         # Guarda los cambios en la base de datos
