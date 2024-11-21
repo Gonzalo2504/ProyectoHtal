@@ -57,3 +57,8 @@ def read_pacientes_en_espera(skip: int = 0, limit: int = 100000, db: Session = D
 @router.get("/pacientes/atendidos/lista", response_model=List[Paciente])
 def read_pacientes_atendidos(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     return crud_pacientes.get_pacientes_atendidos(db=db, skip=skip, limit=limit)
+
+# Ruta para leer pacientes en tratamiento, accesible para enfermeros
+@router.get("/pacientes/en_tratamiento/lista", response_model=List[Paciente])
+def read_pacientes_en_tratamiento(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+    return crud_pacientes.get_pacientes_en_tratamiento(db=db, skip=skip, limit=limit)

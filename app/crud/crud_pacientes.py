@@ -28,13 +28,17 @@ def get_pacientes(db: Session, skip: int = 0, limit: int = 100000):
 def get_paciente(db: Session, paciente_id: int):
     return db.query(PacienteModel).filter(PacienteModel.id == paciente_id).first()
 
-# Obtener pacientes que est n atendidos
+# Obtener pacientes que est  atendidos
 def get_pacientes_atendidos(db: Session, skip: int = 0, limit: int = 100000):
     return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "Atendido").offset(skip).limit(limit).all()
 
-# Obtener pacientes que est n en espera
+# Obtener pacientes que est  en espera
 def get_pacientes_en_espera(db: Session, skip: int = 0, limit: int = 100000):
     return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "En espera").offset(skip).limit(limit).all()
+
+# Obtener pacientes que est  en tratamiento
+def get_pacientes_en_tratamiento(db: Session, skip: int = 0, limit: int = 100000):
+    return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "En tratamiento").offset(skip).limit(limit).all()
 
 # Actualizar datos de un paciente
 def update_paciente(db: Session, paciente_id: int, paciente: PacienteUpdate):
