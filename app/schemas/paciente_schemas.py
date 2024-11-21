@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import date
 
@@ -10,7 +10,7 @@ class PacienteCreate(BaseModel):
     fecha_nacimiento: date
     direccion: str
     telefono: Optional[str] = None
-    email: str
+    email: EmailStr
     estado_atencion: Optional[str] = None
 
 # Schema para mostrar los datos de Paciente
@@ -22,7 +22,7 @@ class Paciente(BaseModel):
     fecha_nacimiento: date
     direccion: str
     telefono: Optional[str] = None
-    email: str
+    email: EmailStr
     estado_atencion: Optional[str] = None
     
     class Config:
@@ -35,7 +35,7 @@ class PacienteUpdate(BaseModel):
     fecha_nacimiento: Optional[date] = None
     direccion: Optional[str] = None
     telefono: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     estado_atencion: Optional[str]
 
     class Config:

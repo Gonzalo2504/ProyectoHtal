@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 class MedicoBase(BaseModel):
@@ -6,7 +6,7 @@ class MedicoBase(BaseModel):
     apellido: str
     dni: int
     especialidad: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     telefono: Optional[str] = None
     usuario: Optional[str] = None
     contrasena: Optional[str] = None
@@ -20,7 +20,7 @@ class MedicoUpdate(BaseModel):
     apellido: Optional[str] = None
     dni: Optional[int] = None
     especialidad: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     telefono: Optional[str] = None
     usuario: Optional[str] = None
     contrasena: Optional[str] = None
