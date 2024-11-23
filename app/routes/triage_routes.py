@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from datetime import datetime
-
 from app.crud import crud_triage
 from app.schemas.triage_schemas import TriageCreate, TriageRead, TriageUpdate, TriageList
 from app.database import get_db
@@ -12,14 +10,11 @@ router = APIRouter()
 
 @router.post("/triages", response_model=TriageRead)
 def create_triage(triage: TriageCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
-    # Usa el id_usuario extraído del token
-    id_enfermero = current_user.id_usuario
-
-    # Crear el triage asociándolo con el enfermero autenticado
+    
     new_triage = TriageCreate(
         id_paciente=triage.id_paciente,
-        id_enfermero=id_enfermero,
-        fecha_y_hora=datetime.now(),
+        id_enfermero=triage.id_enfermero,
+        fecha_y_hora=triage.fecha_y_hora, 
         clasificacion=triage.clasificacion,
         antecedentes=triage.antecedentes,
         frecuencia_cardiaca=triage.frecuencia_cardiaca,

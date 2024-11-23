@@ -6,7 +6,7 @@ from datetime import datetime
 class TriageCreate(BaseModel):
     id_paciente: int
     id_enfermero: int
-    fecha_y_hora: datetime
+    fecha_y_hora: Optional[datetime] = None
     clasificacion: str
     antecedentes: Optional[str] = None
     frecuencia_cardiaca: Optional[str] = None

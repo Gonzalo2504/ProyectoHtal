@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, Time
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
+from datetime import datetime
 from app.database import Base
 
 Base = declarative_base()
@@ -38,10 +39,12 @@ class Paciente(Base):
     direccion = Column(String(255))
     telefono = Column(String(255))
     email = Column(String(255))
-    estado_atencion = Column(String(50), default="en espera") #puede ser "en espera", "atendido", o "en tratamiento"
-
+    estado_atencion = Column(String(50), default="en espera")
+    fecha_estado_cambio = Column(Time, default=func.current_time())
+    
     triages = relationship("TriagePaciente", back_populates="paciente")
     ordenes_medicas = relationship("OrdenMedica", back_populates="paciente")
+
 class Medico(Base):
     __tablename__ = "medicos"
 

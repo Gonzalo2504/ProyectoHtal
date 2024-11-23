@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import date
+from datetime import date, datetime, time
 
 # Schema para creación de Paciente 
 class PacienteCreate(BaseModel):
@@ -12,6 +12,7 @@ class PacienteCreate(BaseModel):
     telefono: Optional[str] = None
     email: EmailStr
     estado_atencion: Optional[str] = None
+    fecha_estado_cambio: Optional[time] = None
 
 # Schema para mostrar los datos de Paciente
 class Paciente(BaseModel):
@@ -24,6 +25,7 @@ class Paciente(BaseModel):
     telefono: Optional[str] = None
     email: EmailStr
     estado_atencion: Optional[str] = None
+    fecha_estado_cambio: Optional[time] = None
     
     class Config:
         from_attributes = True  
@@ -37,6 +39,7 @@ class PacienteUpdate(BaseModel):
     telefono: Optional[str] = None
     email: Optional[EmailStr] = None
     estado_atencion: Optional[str]
+    fecha_estado_cambio: Optional[time] = None
 
     class Config:
         from_attributes = True
