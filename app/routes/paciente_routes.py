@@ -4,6 +4,8 @@ from typing import List
 
 from app.crud import crud_pacientes
 from app.schemas.paciente_schemas import Paciente, PacienteCreate, PacienteUpdate
+from app.schemas.triage_schemas import TriageRead
+from app.models.models import TriagePaciente
 from app.database import get_db
 from app.auth import get_user_by_role, Usuario
 
@@ -62,3 +64,15 @@ def read_pacientes_atendidos(skip: int = 0, limit: int = 100000, db: Session = D
 @router.get("/pacientes/en_tratamiento/lista", response_model=List[Paciente])
 def read_pacientes_en_tratamiento(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     return crud_pacientes.get_pacientes_en_tratamiento(db=db, skip=skip, limit=limit)
+
+# Obtener pacientes en atención
+@router.get("/pacientes/en-atencion", response_model=List[Paciente])
+def get_pacientes_en_atencion(db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
+    pacientes_en_atencion = db.query(Paciente).filter(Paciente.estado_atencion == "En atención").all()
+    return pacientes_en_atencion
+
+# Obtener último triage de un paciente
+@router.get("/pacientes/{paciente_id}/ultimo-triage", response_model=TriageRead)
+def get_ultimo_triage(paciente_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
+    ultimo_triage = db.query(TriagePaciente).filter(TriagePaciente.id_paciente == paciente_id).order_by(TriagePaciente.fecha_y_hora.desc()).first()
+    return ultimo_triage
