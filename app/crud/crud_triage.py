@@ -1,13 +1,22 @@
 from sqlalchemy.orm import Session
 from app.models.models import TriagePaciente
 from app.schemas.triage_schemas import TriageCreate, TriageUpdate
+from app.crud import crud_pacientes
+from app.schemas.paciente_schemas import PacienteUpdate
 
 # Crear un nuevo triage
+def update_estado_atencion_paciente(db: Session, paciente_id: int):
+    paciente_update = PacienteUpdate(estado_atencion="En atención")
+    crud_pacientes.update_paciente(db, paciente_id, paciente_update)
+
 def create_triage(db: Session, triage: TriageCreate):
     db_triage = TriagePaciente(**triage.model_dump())
     db.add(db_triage)
     db.commit()
     db.refresh(db_triage)
+
+    update_estado_atencion_paciente(db, triage.id_paciente)
+
     return db_triage
 
 # Obtener todos los triages
