@@ -65,11 +65,11 @@ def read_pacientes_atendidos(skip: int = 0, limit: int = 100000, db: Session = D
 def read_pacientes_en_tratamiento(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     return crud_pacientes.get_pacientes_en_tratamiento(db=db, skip=skip, limit=limit)
 
-# Obtener pacientes en atención
-@router.get("/pacientes/en-atencion", response_model=List[Paciente])
-def get_pacientes_en_atencion(db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
-    pacientes_en_atencion = db.query(Paciente).filter(Paciente.estado_atencion == "En atención").all()
-    return pacientes_en_atencion
+# Ruta para leer pacientes por clasificación, accesible para medicos
+@router.get("/pacientes/en-atencion/clasificacion/{clasificacion}", response_model=List[Paciente])
+def get_pacientes_por_clasificacion(clasificacion: str, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
+    pacientes = db.query(Paciente).join(TriagePaciente, Paciente.id == TriagePaciente.id_paciente).filter(TriagePaciente.clasificacion == clasificacion, Paciente.estado_atencion == "En atención").all()
+    return pacientes
 
 # Obtener último triage de un paciente
 @router.get("/pacientes/{paciente_id}/ultimo-triage", response_model=TriageRead)
