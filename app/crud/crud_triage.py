@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.models import TriagePaciente
+from sqlalchemy import select
+from app.models.models import TriagePaciente, Paciente
 from app.schemas.triage_schemas import TriageCreate, TriageUpdate
 from app.crud import crud_pacientes
 from app.schemas.paciente_schemas import PacienteUpdate
@@ -44,3 +45,21 @@ def delete_triage(db: Session, triage_id: int):
         db.delete(db_triage)
         db.commit()
     return db_triage
+
+def obtener_pacientes_por_clasificacion_y_estado(db: Session, clasificacion: str):
+    subquery = (
+        select(TriagePaciente.id_paciente)
+        .where(TriagePaciente.clasificacion == clasificacion)
+        .subquery()
+    )
+
+    pacientes = (
+        db.query(Paciente)
+        .filter(
+            Paciente.id.in_(subquery),
+            Paciente.estado_atencion == "En Atencion"
+        )
+        .all()
+    )
+    
+    return pacientes

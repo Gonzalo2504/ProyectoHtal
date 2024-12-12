@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-
-from app.crud import crud_pacientes
+from app.crud import crud_pacientes, crud_triage
 from app.schemas.paciente_schemas import Paciente, PacienteCreate, PacienteUpdate
 from app.schemas.triage_schemas import TriageRead
 from app.models.models import TriagePaciente
@@ -66,10 +65,9 @@ def read_pacientes_en_tratamiento(skip: int = 0, limit: int = 100000, db: Sessio
     return crud_pacientes.get_pacientes_en_tratamiento(db=db, skip=skip, limit=limit)
 
 # Ruta para leer pacientes por clasificación, accesible para medicos
-@router.get("/pacientes/en-atencion/clasificacion/{clasificacion}", response_model=List[Paciente])
-def get_pacientes_por_clasificacion(clasificacion: str, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
-    pacientes = db.query(Paciente).join(TriagePaciente, Paciente.id == TriagePaciente.id_paciente).filter(TriagePaciente.clasificacion == clasificacion, Paciente.estado_atencion == "En atención").all()
-    return pacientes
+@router.get("/pacientes/en-atencion/clasificacion/{clasificacion}", response_model=list[Paciente])
+def listar_pacientes_por_triaje(clasificacion: str, db: Session = Depends(get_db)):
+    return crud_triage.obtener_pacientes_por_clasificacion_y_estado(db, clasificacion)
 
 # Obtener último triage de un paciente
 @router.get("/pacientes/{paciente_id}/ultimo-triage", response_model=TriageRead)
