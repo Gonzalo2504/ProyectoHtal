@@ -11,22 +11,26 @@ router = APIRouter()
 @router.post("/triages", response_model=TriageRead)
 def create_triage(triage: TriageCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     
-    new_triage = TriageCreate(
-        id_paciente=triage.id_paciente,
-        id_enfermero=triage.id_enfermero,
-        fecha_y_hora=triage.fecha_y_hora, 
-        clasificacion=triage.clasificacion,
-        antecedentes=triage.antecedentes,
-        frecuencia_cardiaca=triage.frecuencia_cardiaca,
-        presion_arterial_sistolica=triage.presion_arterial_sistolica,
-        presion_arterial_diastolica=triage.presion_arterial_diastolica,
-        temperatura=triage.temperatura,
-        frecuencia_respiratoria=triage.frecuencia_respiratoria,
-        saturacion_oxigeno=triage.saturacion_oxigeno,
-        motivo_consulta=triage.motivo_consulta,
-        observaciones=triage.observaciones
-    )
-
+    try:
+        new_triage = TriageCreate(
+            id_paciente=triage.id_paciente,
+            id_enfermero=triage.id_enfermero,
+            fecha_y_hora=triage.fecha_y_hora, 
+            clasificacion=triage.clasificacion,
+            antecedentes=triage.antecedentes,
+            frecuencia_cardiaca=triage.frecuencia_cardiaca,
+            presion_arterial_sistolica=triage.presion_arterial_sistolica,
+            presion_arterial_diastolica=triage.presion_arterial_diastolica,
+            temperatura=triage.temperatura,
+            frecuencia_respiratoria=triage.frecuencia_respiratoria,
+            saturacion_oxigeno=triage.saturacion_oxigeno,
+            motivo_consulta=triage.motivo_consulta,
+            observaciones=triage.observaciones
+        )
+    except ValueError as e:
+        key = str(e).split("'", 2)[1]
+        raise HTTPException(status_code=400, detail=f"Valor invalido para {key}") from e
+    
     return crud_triage.create_triage(db=db, triage=new_triage)
 
 
