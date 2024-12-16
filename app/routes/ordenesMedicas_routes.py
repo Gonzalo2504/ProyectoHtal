@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.crud.crud_ordenes_medicas import create_orden_medica, read_ordenes_medicas, read_orden_medica, update_orden_medica, delete_orden_medica
 from app.auth import get_user_by_role, Usuario
-from app.schemas.ordenesMedicas_schemas import OrdenMedicaCreate, OrdenMedica as OrdenMedicaSchema
+from app.schemas.ordenesMedicas_schemas import OrdenMedicaSchema
 from sqlalchemy.orm import Session
 from app.database import get_db
 from typing import List
@@ -10,7 +10,7 @@ router = APIRouter()
 
 # Crear una nueva orden médica
 @router.post("/ordenes_medicas/", response_model=OrdenMedicaSchema)
-def create_orden_medica_endpoint(orden: OrdenMedicaCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
+def create_orden_medica_endpoint(orden: OrdenMedicaSchema, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
     return create_orden_medica(db, orden)
 
 # Leer todas las órdenes médicas
@@ -28,7 +28,7 @@ def read_orden_medica_endpoint(orden_id: int, db: Session = Depends(get_db), cur
 
 # Actualizar una orden médica por su ID
 @router.put("/ordenes_medicas/{orden_id}", response_model=OrdenMedicaSchema)
-def update_orden_medica_endpoint(orden_id: int, orden_update: OrdenMedicaCreate, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
+def update_orden_medica_endpoint(orden_id: int, orden_update: OrdenMedicaSchema, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
     try:
         return update_orden_medica(db, orden_id, orden_update)
     except ValueError as e:
