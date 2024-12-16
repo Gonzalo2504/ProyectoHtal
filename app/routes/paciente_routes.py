@@ -64,6 +64,11 @@ def read_pacientes_atendidos(skip: int = 0, limit: int = 100000, db: Session = D
 def read_pacientes_en_tratamiento(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     return crud_pacientes.get_pacientes_en_tratamiento(db=db, skip=skip, limit=limit)
 
+# Ruta para leer pacientes con orden medica creada, accesible para enfermeros
+@router.get("/pacientes/orden-medica-creada/lista", response_model=List[Paciente])
+def read_pacientes_con_orden_medica_creada(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
+    return crud_pacientes.get_pacientes_con_orden_medica_creada(db=db, skip=skip, limit=limit)
+
 # Ruta para leer pacientes por clasificación, accesible para medicos
 @router.get("/pacientes/en-atencion/clasificacion/{clasificacion}", response_model=list[Paciente])
 def listar_pacientes_por_triaje(clasificacion: str, db: Session = Depends(get_db)):

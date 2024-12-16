@@ -51,3 +51,7 @@ def delete_orden_medica(db: Session, orden_id: int):
     db.delete(orden)
     db.commit()
     return orden
+
+def get_ultima_orden_medica_por_paciente(db: Session, id_paciente: int):
+    orden = db.query(OrdenMedica).filter(OrdenMedica.id_paciente == id_paciente).order_by(OrdenMedica.fecha_y_hora.desc()).first()
+    return orden

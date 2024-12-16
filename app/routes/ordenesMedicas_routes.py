@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from app.crud.crud_ordenes_medicas import create_orden_medica, read_ordenes_medicas, read_orden_medica, update_orden_medica, delete_orden_medica
+from app.crud.crud_ordenes_medicas import create_orden_medica, read_ordenes_medicas, read_orden_medica, update_orden_medica, delete_orden_medica, get_ultima_orden_medica_por_paciente
 from app.auth import get_user_by_role, Usuario
 from app.schemas.ordenesMedicas_schemas import OrdenMedicaSchema
 from sqlalchemy.orm import Session
@@ -24,6 +24,14 @@ def read_orden_medica_endpoint(orden_id: int, db: Session = Depends(get_db), cur
     orden = read_orden_medica(db, orden_id)
     if orden is None:
         raise HTTPException(status_code=404, detail="Orden no encontrada")
+    return orden
+
+# Leer la última orden médica de un paciente por su ID
+@router.get("/ordenes_medicas/ultima_por_paciente/{id_paciente}", response_model=OrdenMedicaSchema)
+def get_ultima_orden_medica_por_paciente_endpoint(id_paciente: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2, 3]))):
+    orden = get_ultima_orden_medica_por_paciente(db, id_paciente)
+    if orden is None:
+        raise HTTPException(status_code=404, detail="No se encontró la orden")
     return orden
 
 # Actualizar una orden médica por su ID
