@@ -3,8 +3,9 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.crud import crud_pacientes, crud_triage
 from app.schemas.paciente_schemas import Paciente, PacienteCreate, PacienteUpdate
+from app.schemas.evolucionPaciente_schemas import EvolucionPacienteRead
 from app.schemas.triage_schemas import TriageRead
-from app.models.models import TriagePaciente
+from app.models.models import EvolucionPaciente, TriagePaciente
 from app.database import get_db
 from app.auth import get_user_by_role, Usuario
 
@@ -69,9 +70,19 @@ def read_pacientes_en_tratamiento(skip: int = 0, limit: int = 100000, db: Sessio
 def read_pacientes_con_orden_medica_creada(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([3]))):
     return crud_pacientes.get_pacientes_con_orden_medica_creada(db=db, skip=skip, limit=limit)
 
+# Ruta para leer pacientes con evolución de enfermería, accesible para enfermeros
+@router.get("/pacientes/con-evolucion-de-enfermeria/lista", response_model=List[Paciente])
+def read_pacientes_con_evolucion_de_enfermeria(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2, 3]))):
+    return crud_pacientes.get_pacientes_con_evolucion_de_enfermeria(db=db, skip=skip, limit=limit)
+
+@router.get("/pacientes/{paciente_id}/ultima-evolucion", response_model=EvolucionPacienteRead)
+def get_ultima_evolucion(paciente_id: int, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
+    ultima_evolucion = db.query(EvolucionPaciente).filter(EvolucionPaciente.id_paciente == paciente_id).order_by(EvolucionPaciente.fecha_y_hora.desc()).first()
+    return ultima_evolucion
+
 # Ruta para leer pacientes por clasificación, accesible para medicos
 @router.get("/pacientes/en-atencion/clasificacion/{clasificacion}", response_model=list[Paciente])
-def listar_pacientes_por_triaje(clasificacion: str, db: Session = Depends(get_db)):
+def listar_pacientes_por_triaje(clasificacion: str, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):
     return crud_triage.obtener_pacientes_por_clasificacion_y_estado(db, clasificacion)
 
 # Obtener último triage de un paciente

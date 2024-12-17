@@ -45,6 +45,7 @@ class Paciente(Base):
     triages = relationship("TriagePaciente", back_populates="paciente")
     ordenes_medicas = relationship("OrdenMedica", back_populates="paciente")
     evoluciones = relationship('EvolucionPaciente', backref='evoluciones_paciente')
+    eventos = relationship("Evento", back_populates="paciente")
 
 class Medico(Base):
     __tablename__ = "medicos"
@@ -62,6 +63,7 @@ class Medico(Base):
 
     rol = relationship("Rol")
     ordenes_medicas = relationship("OrdenMedica", back_populates="medico")
+    eventos_medico = relationship("Evento", back_populates="medico")
 
 class Enfermero(Base):
     __tablename__ = "enfermeros"
@@ -129,3 +131,15 @@ class EvolucionPaciente(Base):
     paciente = relationship('Paciente', backref='evoluciones_paciente_evolucion')
     enfermero = relationship('Enfermero', backref='evoluciones_enfermero')
 
+class Evento(Base):
+    __tablename__ = "eventos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    tipo_evento = Column(String(50), nullable=False)
+    fecha_hora = Column(DateTime, default=func.now())
+    observaciones = Column(Text)
+    paciente_id = Column(Integer, ForeignKey("pacientes.id"), nullable=False)
+    medico_id = Column(Integer, ForeignKey("medicos.id"), nullable=True)
+
+    paciente = relationship("Paciente", backref="eventos")
+    medico = relationship("Medico", backref="eventos_medico")

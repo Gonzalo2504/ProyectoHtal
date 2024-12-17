@@ -47,6 +47,10 @@ def get_pacientes_en_tratamiento(db: Session, skip: int = 0, limit: int = 100000
 def get_pacientes_con_orden_medica_creada(db: Session, skip: int = 0, limit: int = 100000):
     return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "Orden Medica Creada").offset(skip).limit(limit).all()
 
+def get_pacientes_con_evolucion_de_enfermeria(db: Session, skip: int = 0, limit: int = 100000):
+    return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "Con Evolucion de Enfermeria").offset(skip).limit(limit).all()
+
+
 def update_paciente(db: Session, paciente_id: int, paciente: PacienteUpdate):
     db_paciente = db.query(PacienteModel).filter(PacienteModel.id == paciente_id).first()
     
