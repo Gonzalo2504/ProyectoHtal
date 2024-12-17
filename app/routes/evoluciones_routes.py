@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.evolucionPaciente_schemas import EvolucionPacienteCreate, EvolucionPacienteUpdate, EvolucionPacienteRead
-from app.crud.crud_evoluciones import evolucion_paciente_crud
+from app.crud import crud_evoluciones as evolucion_paciente_crud
 from app.auth import get_user_by_role, Usuario
 
 router = APIRouter()

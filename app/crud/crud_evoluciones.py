@@ -1,4 +1,4 @@
-from app.database import Session
+from sqlalchemy.orm import Session
 from app.models.models import EvolucionPaciente
 from app.schemas.evolucionPaciente_schemas import EvolucionPacienteCreate, EvolucionPacienteUpdate
 
