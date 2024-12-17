@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.schemas.eventos_schemas import EventoSchema, EventoCreateSchema, EventoUpdateSchema
-from app.crud.crud_eventos import get_evento, get_eventos, create_evento, update_evento, delete_evento
+from app.crud.crud_eventos import get_evento, get_eventos, update_evento, delete_evento
+from app.crud.crud_eventos import create_evento as crud_create_evento
 from app.database import get_db
 from app.auth import get_user_by_role, Usuario
 
@@ -20,7 +21,7 @@ def read_evento(evento_id: int, db: Session = Depends(get_db), current_user: Usu
 
 @router.post("/eventos/", response_model=EventoSchema)
 def create_evento(evento: EventoCreateSchema, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2]))):
-    return create_evento(db, evento)
+    return crud_create_evento(db, evento)
 
 @router.put("/eventos/{evento_id}", response_model=EventoSchema)
 def update_evento(evento_id: int, evento: EventoUpdateSchema, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1, 2]))):

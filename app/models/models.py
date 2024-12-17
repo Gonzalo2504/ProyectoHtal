@@ -45,7 +45,7 @@ class Paciente(Base):
     triages = relationship("TriagePaciente", back_populates="paciente")
     ordenes_medicas = relationship("OrdenMedica", back_populates="paciente")
     evoluciones = relationship('EvolucionPaciente', backref='evoluciones_paciente')
-    eventos = relationship("Evento", back_populates="paciente")
+    eventos_pacientes = relationship("Evento", back_populates="paciente")
 
 class Medico(Base):
     __tablename__ = "medicos"
@@ -63,7 +63,7 @@ class Medico(Base):
 
     rol = relationship("Rol")
     ordenes_medicas = relationship("OrdenMedica", back_populates="medico")
-    eventos_medico = relationship("Evento", back_populates="medico")
+    eventos_asociados = relationship("Evento", back_populates="medico")
 
 class Enfermero(Base):
     __tablename__ = "enfermeros"
