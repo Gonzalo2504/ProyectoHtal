@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.schemas.eventos_schemas import EventoSchema, EventoCreateSchema, EventoUpdateSchema
+from app.schemas.paciente_schemas import PacienteUpdate
 from app.models.models import Evento
 
 def get_evento(db: Session, evento_id: int):
@@ -13,6 +14,11 @@ def create_evento(db: Session, evento: EventoCreateSchema):
     db.add(db_evento)
     db.commit()
     db.refresh(db_evento)
+
+    paciente_update = PacienteUpdate(estado_atencion="Informe final")
+    from app.crud.crud_pacientes import update_paciente
+    update_paciente(db, evento.paciente_id, paciente_update)
+
     return db_evento
 
 def update_evento(db: Session, evento_id: int, evento: EventoUpdateSchema):

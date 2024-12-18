@@ -80,6 +80,11 @@ def get_ultima_evolucion(paciente_id: int, db: Session = Depends(get_db), curren
     ultima_evolucion = db.query(EvolucionPaciente).filter(EvolucionPaciente.id_paciente == paciente_id).order_by(EvolucionPaciente.fecha_y_hora.desc()).first()
     return ultima_evolucion
 
+# Ruta para leer pacientes con informe final, accesible para enfermeros
+@router.get("/pacientes/con-informe-final/lista", response_model=List[Paciente])
+def read_pacientes_con_informe_final(skip: int = 0, limit: int = 100000, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([1]))):
+    return crud_pacientes.get_pacientes_con_informe_final(db=db, skip=skip, limit=limit)
+
 # Ruta para leer pacientes por clasificación, accesible para medicos
 @router.get("/pacientes/en-atencion/clasificacion/{clasificacion}", response_model=list[Paciente])
 def listar_pacientes_por_triaje(clasificacion: str, db: Session = Depends(get_db), current_user: Usuario = Depends(get_user_by_role([2]))):

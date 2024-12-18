@@ -75,3 +75,6 @@ def delete_paciente(db: Session, paciente_id: int):
         db.commit()
         return True
     return False
+
+def get_pacientes_con_informe_final(db: Session, skip: int = 0, limit: int = 100000):
+    return db.query(PacienteModel).filter(PacienteModel.estado_atencion == "Informe final").offset(skip).limit(limit).all()
